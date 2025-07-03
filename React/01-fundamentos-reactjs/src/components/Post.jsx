@@ -1,42 +1,89 @@
-import styles from './Post.module.css';
+import { format , formatDistanceToNow} from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
-export function Post(){
-    return(
-        <article className={styles.post}>
-            <header>
-                <div className={styles.author}>
-                    <img 
-                        className={styles.avatar}
-                        src="https://github.com/GabrielFerrarez19.png" 
-                    />
-                    <div className={styles.authorInfo}>
-                        <strong>Gabriel Ferrarez</strong>
-                        <span>Web developer</span>
-                    </div>
-                </div>
-                <time title="13 de maio as 08 horas"dateTime="2022-05-11 08:03:59">Púbicada a 1h</time>
-            </header>
-            <div className={styles.content}>
-                <p>Fala galeraa 👋</p>
-                    <p>Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀</p>
-                    <p>👉{" "}<a href="">jane.design/doctorcare</a></p>
-                    <p>
-                        <a href="">#novoprojeto</a>{" "}
-                        <a href=""> #nlw</a>{" "}
-                        <a href=""> #rocketseat</a>
-                    </p>
-            </div>
+import styles from "./Post.module.css";
+import { Comments } from "./Comments";
+import { Avatar } from "./Avatar";
+import { useState } from 'react';
 
-            <form className={styles.commentForm}>
-                <strong>Deixe seu Feedback</strong>
-                <textarea 
-                    placeholder='Deixe um comentario'
-                />
 
-                <footer>
-                    <button type="submit">Publicar</button>
-                </footer>
-            </form>
-        </article>
-    );
+export function Post({ author, publishedAt , content }) {
+
+    const [comments, setComments] = useState([
+        'Post muito bacana em!!',
+
+    ])
+
+    const [ newCommentsText, setNewCommentsText] = useState('')
+
+
+    const publishedDateFormatted = format(publishedAt, "d 'de' MMMM 'às' HH:mm'h'", {
+        locale: ptBR,
+    });
+
+    const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+        locale: ptBR,
+        addSuffix:"há",
+    });
+
+    function handleCreateNewComment(){
+        event.preventDefault()
+
+        
+        setComments([...comments, newCommentsText])
+
+        setNewCommentsText('')
+
+    }
+
+    function handleNewCommentsChande(){ 
+        setNewCommentsText(event.target.value);
+    }
+
+  return (
+    <article className={styles.post}>
+      <header>
+        <div className={styles.author}>
+          <Avatar src={author.avatarUrl} />
+          <div className={styles.authorInfo}>
+            <strong>{author.name}</strong>
+            <span>{author.role}</span>
+          </div>
+        </div>
+        <time title={publishedDateFormatted} dateTime={publishedAt.toISOString()}>
+        {publishedDateRelativeToNow}
+        </time>
+      </header>
+      <div className={styles.content}>
+        {content.map(line =>{
+            if(line.type == 'paragraph' ){
+                return <p>{line.content}</p>
+            }else if (line.content == 'link'){
+                return <p><a href="">{line.link}</a></p> 
+            }
+        })}
+      </div>
+
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
+        <strong>Deixe seu Feedback</strong>
+
+        <textarea 
+            name="comment"
+            placeholder="Deixe um comentario" 
+            value={newCommentsText}
+            onChange={handleNewCommentsChande}
+        />
+
+        <footer>
+          <button type="submit">Publicar</button>
+        </footer>
+      </form>
+
+      <div className={styles.commentList}>
+        {comments.map(comments =>{
+            return <Comments content={comments}/>
+        })}
+      </div>
+    </article>
+  );
 }
