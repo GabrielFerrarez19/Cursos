@@ -1,13 +1,17 @@
 import { Header } from "../../components/Header";
 import { Summary } from "../../components/Summary";
-import { SeachForm } from "./SerachForm";
+import { SeachForm } from "../../components/SerachForm";
 import {
   PriceHighLight,
   TranasctionsTable,
   TransactionsContainer,
 } from "./styles";
+import { useContext } from "react";
+import { TransactionsContext } from "../../contexts/TransactionsContext";
 
 export function Transactions() {
+  const { transactions } = useContext(TransactionsContext);
+
   return (
     <div>
       <Header />
@@ -17,22 +21,20 @@ export function Transactions() {
         <SeachForm />
         <TranasctionsTable>
           <tbody>
-            <tr>
-              <td width="40%">Desenvolvimento de site</td>
-              <td>
-                <PriceHighLight variant="income">R$ 12.000,00</PriceHighLight>
-              </td>
-              <td>Venda</td>
-              <td>13/04/2022</td>
-            </tr>
-            <tr>
-              <td width="40%">Hamburger</td>
-              <td>
-                <PriceHighLight variant="outcome">- R$ 59,00</PriceHighLight>
-              </td>
-              <td>Alimentação</td>
-              <td>10/04/2022</td>
-            </tr>
+            {transactions.map((transactions) => {
+              return (
+                <tr key={transactions.id}>
+                  <td width="40%">{transactions.description}</td>
+                  <td>
+                    <PriceHighLight variant={transactions.type}>
+                      R$ {transactions.price}
+                    </PriceHighLight>
+                  </td>
+                  <td>{transactions.category}</td>
+                  <td>{transactions.createdAt}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </TranasctionsTable>
       </TransactionsContainer>
