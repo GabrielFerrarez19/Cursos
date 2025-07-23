@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
 
-interface Transactions {
+interface Transaction {
   id: number;
   description: string;
   type: "income" | "outcome";
@@ -10,7 +10,8 @@ interface Transactions {
 }
 
 interface TransactionContextType {
-  transactions: Transactions[];
+  transactions: Transaction[];
+  fetchTransactions: (query?: string) => Promise<void>;
 }
 
 interface TransactionsProvidersProps {
@@ -20,21 +21,32 @@ interface TransactionsProvidersProps {
 export const TransactionsContext = createContext({} as TransactionContextType);
 
 export function TransactionsProvider({ children }: TransactionsProvidersProps) {
-  const [transactions, setTransactions] = useState<Transactions[]>([]);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
 
-  async function loadTransactions() {
-    const reponse = await fetch("http://localhost:3333/transactions");
-    const data = await reponse.json();
+  console.log(transactions);
+
+  async function fetchTransactions(query?: string) {
+    const url = new URL("http://localhost:3333/transactions");
+
+    if (query) {
+      if (query) {
+        url.searchParams.append("category", query);
+        console.log("URL com filtro:", url.toString()); // Verifique se a URL está correta
+      }
+    }
+
+    const response = await fetch(url);
+    const data: Transaction[] = await response.json();
 
     setTransactions(data);
   }
 
   useEffect(() => {
-    loadTransactions();
+    fetchTransactions();
   }, []);
 
   return (
-    <TransactionsContext.Provider value={{ transactions }}>
+    <TransactionsContext.Provider value={{ transactions, fetchTransactions }}>
       {children}
     </TransactionsContext.Provider>
   );
