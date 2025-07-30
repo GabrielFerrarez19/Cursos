@@ -1,7 +1,7 @@
 {
   "transactions": [
     {
-      "id": 1,
+      "id": "1",
       "description": "Desenvolvimento de site",
       "type": "income",
       "category": "Venda",
@@ -9,7 +9,7 @@
       "createdAt": "2025-07-22T18:54:45.125Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "description": "Hamburger",
       "type": "outcome",
       "category": "Alimentação",
@@ -17,12 +17,28 @@
       "createdAt": "2025-06-22T18:54:45.125Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "description": "Iginite Rocktseat",
       "type": "outcome",
       "category": "Educação",
       "price": 1980,
       "createdAt": "2025-06-22T18:54:45.125Z"
+    },
+    {
+      "id": "b64a",
+      "description": "Desenvolvimento de app",
+      "category": "Venda",
+      "price": 10000,
+      "type": "income",
+      "createdAt": "2025-07-29T13:08:57.567Z"
+    },
+    {
+      "id": "6f3f",
+      "description": "pizza",
+      "category": "Comida",
+      "price": 50,
+      "type": "outcome",
+      "createdAt": "2025-07-29T13:28:57.986Z"
     }
   ]
 }
