@@ -3,7 +3,7 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy_utils.types import ChoiceType
 
 
-bd = create_engine("sqlite:///delivery.db")
+db = create_engine("sqlite:///delivery.db")
 
 Base = declarative_base()
 
