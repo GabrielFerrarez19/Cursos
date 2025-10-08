@@ -10,3 +10,16 @@ class UsuarioSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+class OrderSchema(BaseModel):
+    usuario_id: int
+
+    class Config:
+        from_attributes = True
+
+class LoginSchema(BaseModel):
+    email: str
+    senha: str
+
+    class Config:
+        from_attributes = True
