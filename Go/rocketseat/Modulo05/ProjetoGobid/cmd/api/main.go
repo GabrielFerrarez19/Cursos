@@ -15,6 +15,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
+	"github.com/gorilla/websocket"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
@@ -50,9 +51,19 @@ func main() {
 	s.Cookie.SameSite = http.SameSiteLaxMode
 
 	api := api.Api{
-		Router:       chi.NewMux(),
-		UserServices: services.NewUserServices(pool),
-		Sessions:     s,
+		Router:          chi.NewMux(),
+		UserServices:    services.NewUserServices(pool),
+		ProductServices: services.NewProductService(pool),
+		BidsServices:    services.NewBidsService(pool),
+		Sessions:        s,
+		WeUpgrader: websocket.Upgrader{
+			CheckOrigin: func(r *http.Request) bool {
+				return true
+			},
+		},
+		AuctionLobby: services.AuctionLobby{
+			Rooms: make(map[uuid.UUID]*services.AuctionRoom),
+		},
 	}
 
 	api.BindRoutes()
